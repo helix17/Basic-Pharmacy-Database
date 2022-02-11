@@ -1,0 +1,134 @@
+create table shipper (
+shipper_id char(5) constraint shp_sid_pk primary key,
+sname varchar2(30) constraint shp_snm_nn not null,
+phone_no number(10) constraint shp_pno_nn not null,
+date_joined date constraint shp_djn_nn not null,
+pincode number(6) constraint shp_pcd_nn not null,
+state varchar2(20) constraint shp_ste_nn not null,
+city varchar2(20) constraint shp_cty_nn not null,
+district varchar2(20),
+street varchar2(50) constraint shp_srt_nn not null,
+constraint shp_pno_unq unique(phone_no));
+
+create table shipper_credentials (
+email_id varchar2(30) constraint spc_eid_pk primary key,
+shipper_id char(5) constraint spc_sid_fk references shipper(shipper_id),
+passwrd varchar2(30) constraint spc_pwd_nn not null,
+constraint spc_sid_unq unique(shipper_id));
+
+create table customer (
+customer_id char(5) constraint cst_cid_pk primary key,
+cname varchar2(30) constraint cst_cnm_nn not null,
+phone_no number(10) constraint cst_pno_nn not null,
+date_joined date constraint cst_djn_nn not null,
+pincode number(6) constraint cst_pcd_nn not null,
+state varchar2(20) constraint cst_ste_nn not null,
+city varchar2(20) constraint cst_cty_nn not null,
+district varchar2(20),
+street varchar2(50) constraint cst_srt_nn not null,
+constraint cst_pno_unq unique(phone_no));
+
+create table customer_credentials (
+email_id varchar2(30) constraint csc_eid_pk primary key,
+customer_id char(5) constraint csc_cid_fk references customer(customer_id),
+passwrd varchar2(30) constraint csc_pwd_nn not null,
+constraint csc_cid_unq unique(customer_id));
+
+create table seller (
+seller_id char(5) constraint slr_sid_pk primary key,
+sname varchar2(30) constraint slr_snm_nn not null,
+phone_no number(10) constraint slr_pno_nn not null,
+date_joined date constraint slr_djn_nn not null,
+pincode number(6) constraint slr_pcd_nn not null,
+state varchar2(20) constraint slr_ste_nn not null,
+city varchar2(20) constraint slr_cty_nn not null,
+district varchar2(20),
+street varchar2(50) constraint slr_srt_nn not null,
+constraint slr_pno_unq unique(phone_no),
+constraint slr_srt_unq unique(street));
+
+create table seller_credentials (
+email_id varchar2(30) constraint slc_eid_pk primary key,
+seller_id char(5) constraint slc_sid_fk references seller(seller_id),
+passwrd varchar2(30) constraint slc_pwd_nn not null,
+constraint slc_sid_unq unique(seller_id));
+
+create table medicine (
+med_id char(5) constraint med_mid_pk primary key,
+drug_name varchar2(30) constraint med_dnm_nn not null,
+drug_comb varchar2(30) constraint med_dcb_nn not null);
+
+create table batch (
+batch_no char(5) constraint bch_dno_pk primary key,
+quantity number(3) constraint bch_qty_nn not null,
+company varchar2(30),
+seller char(5) constraint bch_slr_fk references seller(seller_id),
+stock number(3) constraint bch_stk_nn not null,
+med_id char(5) constraint bch_mid_fk references medicine(med_id),
+mrp number(4) constraint bch_mrp_nn not null,
+buy_price number(4) constraint bch_bpc_nn not null,
+sell_price number(4) constraint bch_spc_nn not null,
+mnf_date date constraint bch_mfd_nn not null,
+exp_date date constraint bch_exd_nn not null,
+discount number(4),
+constraint bch_exd_chk check(exp_date>mnf_date),
+constraint bch_spc_chk check(sell_price<mrp));
+
+create table payment_details (
+customer_id char(5),
+pay_no number(2),
+ac_no number(16) constraint pdt_ano_nn not null,
+bank_name varchar2(30) constraint pdt_bnm_nn not null,
+card_name varchar2(30) constraint pdt_cnm_nn not null,
+constraint pdt_cid_pk primary key(customer_id,pay_no),
+constraint pdt_ano_unq unique(customer_id,ac_no));
+
+create table orders (
+order_id char(5) constraint ord_oid_pk primary key,
+shipper char(5) constraint ord_sid_fk references shipper(shipper_id),
+buyer char(5),
+seller char(5) constraint ord_slid_fk references seller(seller_id),
+order_batch char(5) constraint ord_obh_nn not null,
+status varchar2(10) constraint ord_sts_chk check(status in ('Delivered','Cancelled','Shipping','Requested','Dispatched','Returned')),
+payment_details number(2),
+payment_method varchar2(20) constraint ord_pmt_chk check(payment_method in ('Cash on Delivery','Card','Net Banking')),
+payment_id char(5) constraint ord_pid_nn not null,
+order_date date constraint ord_odt_nn not null,
+delivery_date date constraint ord_ddt_nn not null,
+estimated_date date constraint ord_edt_nn not null,
+quantity number(3) constraint ord_qty_nn not null,
+prod_batch char(5) constraint ord_pbh_nn not null,
+discount number(4),
+shipping_cost number(4) constraint ord_sct_nn not null,
+total number(5) constraint ord_ttl_nn not null,
+constraint ord_pbh_fk foreign key(prod_batch) references batch(batch_no),
+constraint ord_pmt_fk foreign key(shipper,payment_details) references payment_details(customer_id,pay_no),
+constraint ord_ddt_chk check(delivery_date>order_date),
+constraint ord_edt_chk check(estimated_date>order_date));
+
+create table order_list (
+customer_id char(5) constraint odl_cid_fk references customer(customer_id),
+order_id char(5) constraint odl_oid_fk references orders(order_id));
+
+safety:
+create table orders (
+order_id char(5) constraint ord_oid_pk primary key,
+shipper char(5) constraint ord_sid_fk references shipper(shipper_id),
+buyer char(5) constraint ord_bid_fk references customer(customer_id),
+seller char(5) constraint ord_slid_fk references seller(seller_id),
+order_batch char(5) constraint ord_obh_nn not null,
+status varchar2(10) constraint ord_sts_chk check(status in ('Delivered','Cancelled','Shipping','Requested','Dispatched','Returned')),
+payment_details number(2) constraint ord_pdt_fk references payment_details(pay_no),
+payment_method varchar2(20) constraint ord_pmt_chk check(payment_method in ('Cash on Delivery','Card','Net Banking')),
+payment_id char(5) constraint ord_pid_nn not null,
+order_date date constraint ord_odt_nn not null,
+delivery_date date constraint ord_ddt_nn not null,
+estimated_date date constraint ord_edt_nn not null,
+quantity number(3) constraint ord_qty_nn not null,
+prod_batch char(5) constraint ord_pbh_nn not null,
+discount number(4),
+shipping_cost number(4) constraint ord_sct_nn not null,
+total number(5) constraint ord_ttl_nn not null,
+constraint ord_pbh_fk foreign key(prod_batch) references batch(batch_no),
+constraint ord_ddt_chk check(delivery_date>order_date),
+constraint ord_edt_chk check(estimated_date>order_date));

@@ -1,0 +1,27 @@
+insert into shipper values ('S0001','Zoom Shippers',9876543210,'01-JAN-2020',600020,'Tamil Nadu','Chennai','Chennai','19A Shoppers Street');
+insert into shipper values ('S0002','AtoZ Shipping',9123456780,'17-JAN-2020',641001,'Tamil Nadu','Coimbatore','Coimbatore','12/3 KG Street');
+insert into shipper values ('S0003','Ship Quick',9876543220,'04-FEB-2020',602001,'Tamil Nadu','Thiruvallur','Thiruvallur','5B Workers Street');
+insert into shipper values ('S0004','Packing and Moving',9876543230,'16-MAR-2020',632001,'Tamil Nadu','Vellore','','No.12 Round Building');
+insert into shipper values ('S0005','KK Shipping',9876543250,'28-MAY-2020',636001,'Tamil Nadu','Salem','Salem','3/13 MAS Road');
+insert into shipper values ('S0006','SD Shippers',9876543240,'12-MAY-2020',620001,'Tamil Nadu','Tiruchirappalli','','15/5 AR Road');
+
+insert into shipper_credentials values ('zoomship@gmail.com','S0001','pass@123');
+insert into shipper_credentials values ('shippers.az@yahoo.com','S0002','yhz001@m');
+insert into shipper_credentials values ('qks.company@gmail.com','S0003','gfyu$123');
+insert into shipper_credentials values ('shipping.pnm@gmail.com','S0004','test@pnm');
+insert into shipper_credentials values ('KK_shippers@yahoo.com','S0005','$svdfvh@pd');
+insert into shipper_credentials values ('SD.Shipping@gmail.com','S0006','123abc$@0');
+
+insert into customer values ('C0001','Kishan',8765432110,'05-JAN-2020',600039,'Tamil Nadu','Chennai','Chennai','201/12 Bridge Colony');
+insert into customer values ('C0002','Abdul',8765432120,'06-JAN-2020',641016,'Tamil Nadu','Coimbatore','Coimbatore','no.121, 2nd cross street');
+insert into customer values ('C0003','Alice',8765432920,'11-JAN-2020',602005,'Tamil Nadu','Thiruvallur','Thiruvallur','no.6 LL Street');
+insert into customer values ('C0004','Paul',9876012342,'11-JAN-2020',632009,'Tamil Nadu','Vellore','Vellore','no.16A thiruvalluvar street');
+insert into customer values ('C0005','Nithin',9873250674,'01-FEB-2020',636001,'Tamil Nadu','Salem','Salem','no.20 Star Colony');
+insert into customer values ('C0006','Shreya',9832401282,'03-FEB-2020',620021,'Tamil Nadu','Tiruchirappalli','Trichy','no.90/20 Mathura Flats');
+
+insert into customer_credentials values ('kishan@gmail.com','C0001','1997@kishan');
+insert into customer_credentials values ('abdul.md@gmail.com','C0002','tst@991');
+insert into customer_credentials values ('alice@gmail.com','C0003','1jjhgsf$1');
+insert into customer_credentials values ('paul1990@gmail.com','C0004','jhgfs&30');
+insert into customer_credentials values ('niteen19@gmail.com','C0005','19niteen@123');
+insert into customer_credentials values ('shreya.g@gmail.com','C0006','khdf@srya987');
